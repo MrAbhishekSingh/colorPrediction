@@ -139,6 +139,7 @@ class AdminController {
             });
         }
     }
+     
     static updateGame = async (req, res) => {
         try {
             const gameId = req.query.id;
