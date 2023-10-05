@@ -13,7 +13,7 @@ class UserController {
         const TWILIO_PHONE_NUMBER = '+919335313553';
         const client = twilio(TWILIO_SID, TWILIO_AUTH_TOKEN);
 
-        const { name, phone, password, password_confirmation } = req.body
+        const { name, phone, password, password_confirmation ,Refer_code} = req.body
         const user = await UserModel.findOne({ phone: phone })
         if (user) {
             res.send({ "status": "failed", "message": "Phone number already exists" })
@@ -41,16 +41,19 @@ class UserController {
                             name: name,
                             password: hashPassword,
                             phone: phone,
-                            Refer_code: '',
+                            Refer_code: Refer_code,
                             role: 1,
                             otp: otp,
                             otpValidUpto: Date.now() + process.env.OTP_VALID_UPTO_SEC * 1000,
-                            otpVerifyStatus: false
+                            otpVerifyStatus: false,
+                            is_admin: false,
+                            is_active: true
                         })
                         await doc.save()
                         const saved_user = await UserModel.findOne({ phone: phone })
                         res.status(201).send({
-                            "status": "success", "message": "OTP has been send your given number",
+                            "status": "success",
+                            "message": "OTP has been send your given number",
                             "data": [{ phone: saved_user.phone }]
                         })
                     } catch (error) {
@@ -76,11 +79,13 @@ class UserController {
                     if ((user.phone === phone) && isMatch) {
                         // Generate JWT Token
                         const userData = await UserModel.findOne({ phone: phone })
+                        const userDataWithoutPassword = { ...userData.toObject() };
+                        delete userDataWithoutPassword.password;
                         const token = jwt.sign({ userID: user._id }, process.env.JWT_SECRET_KEY, { expiresIn: '5d' })
                         res.send({
                             "status": "success",
                             "message": "Login Success",
-                            "data": [{ data: userData, token: token }]
+                            "data": [{ data: userDataWithoutPassword, token: token }]
                         })
                     } else {
                         res.send({ "status": "failed", "message": "Phone or Password is not Valid" })
@@ -133,11 +138,13 @@ class UserController {
                                 }
                             })
                             const userData = await UserModel.findOne({ phone: phone })
+                            const userDataWithoutPassword = { ...userData.toObject() };
+                            delete userDataWithoutPassword.password;
                             const token = jwt.sign({ userID: user._id }, process.env.JWT_SECRET_KEY, { expiresIn: '5d' })
                             res.send({
                                 "status": "success",
                                 "message": "OTP Verify Successfully",
-                                "data": [{ data: userData, token: token }]
+                                "data": [{ data: userDataWithoutPassword, token: token }]
                             })
                         } else {
                             res.send({ "status": "failed", "message": "Please enter correct OTP" })

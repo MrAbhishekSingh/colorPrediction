@@ -2,10 +2,12 @@ import express from 'express';
 const router = express.Router();
 import UserController from '../controllers/userController.js';
 import checkUserAuth from '../middlewares/auth-middleware.js';
+import AdminController from '../controllers/adminController.js';
 
 // ROute Level Middleware - To Protect Route
 router.use('/change-password', checkUserAuth)
 router.use('/user-data', checkUserAuth)
+router.use('/game', checkUserAuth)
 
 // Public Routes
 router.post('/register', UserController.userRegistration)
@@ -23,6 +25,7 @@ router.post('/reset-password', UserController.resetPassword)
 // Protected Routes
 router.post('/change-password', UserController.changeUserPassword)
 router.get('/user-data', UserController.userData)
+router.get('/game', AdminController.getGameList)
 
 
 export default router

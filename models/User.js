@@ -10,7 +10,9 @@ const userSchema = new mongoose.Schema({
     role: { type: String, required: true },
     otp: { type: String, required: true },
     otpValidUpto: { type: String, required: true },
-    otpVerifyStatus: { type: String, required: true }
+    otpVerifyStatus: { type: String, required: true },
+    is_admin: { type: Boolean, required: true },
+    is_active: { type: Boolean, required: true }
 })
 
 // Model
