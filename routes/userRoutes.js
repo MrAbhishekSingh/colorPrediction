@@ -32,7 +32,7 @@ router.get('/game', AdminController.getGameList)
 //wallet route
 router.post('/add-fund', WalletController.addAmount)
 router.post('/withdraw-amount', WalletController.withdrawAmount)
-router.get('/withdraw-history', WalletController.withdrawAmount)
+router.get('/withdraw-history', WalletController.withdrawHistory)
 
 
 

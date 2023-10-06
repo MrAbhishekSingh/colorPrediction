@@ -10,6 +10,7 @@ const walletAddSchema = new mongoose.Schema({
     status: { type: String, required: true }
 })
 const walletWithDrawSchema = new mongoose.Schema({
+    user_id: { type: String, required: true, trim: true },
     amount: { type: Number, default: 0 },
     phone: { type: String, required: true },
     upi_mode: { type: String, required: true },

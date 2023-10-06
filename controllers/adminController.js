@@ -49,11 +49,8 @@ class AdminController {
 
     static deleteUser = async (req, res) => {
         const userId = req.query.userId;
-        console.log(userId);
-
         try {
             const user = await UserModel.findById(userId);
-            console.log(user);
             if (!user) {
                 return res.status(404).send({
                     "status": "error",
